@@ -1,0 +1,5 @@
+.DS_Store
+
+*.pdf
+
+example/merged_entry.tex
