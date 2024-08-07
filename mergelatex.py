@@ -9,7 +9,7 @@ root: Path = None
 
 def parse_args() -> Tuple[Path, Path, Path]:
     parser = ArgumentParser(
-        prog="LaTeX Merger", description="Merge LaTeX Files into Single .tex File"
+        prog="texpack", description="Pack LaTeX Files into Single .tex File"
     )
     parser.add_argument("entry", type=Path, help="Entry .tex File Path")
     parser.add_argument(
@@ -107,11 +107,9 @@ def expand(parent: Path, lines: List[str], depth: int = 0) -> List[str]:
             arrow = ">" * (depth + 1)
             barrow = "<" * (depth + 1)
             target_relation = str(target.relative_to(root))
-            expanded_lines.append(f"% {arrow} {target_relation} {arrow} : LaTeX Merger")
+            expanded_lines.append(f"% {arrow} {target_relation} {arrow} : texpack")
             expanded_lines += expand(target.parent, body_lines, depth=depth + 1)
-            expanded_lines.append(
-                f"% {barrow} {target_relation} {barrow} : LaTeX Merger"
-            )
+            expanded_lines.append(f"% {barrow} {target_relation} {barrow} : texpack")
         else:
             expanded_lines.append(line)
     return expanded_lines
