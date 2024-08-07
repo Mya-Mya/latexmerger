@@ -7,3 +7,4 @@ example/merged_entry.tex
 __pycache__/
 dist/
 texpack.egg-info/
+pypi-traial-sub-version.txt
