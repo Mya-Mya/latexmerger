@@ -1,4 +1,4 @@
-from utils import *
+from .utils import *
 from typing import Tuple, List, Optional
 import re
 from abc import ABC, abstractmethod

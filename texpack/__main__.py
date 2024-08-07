@@ -1,7 +1,7 @@
 from typing import Tuple, List, Optional
 from argparse import ArgumentParser
 from pathlib import Path
-from extractors import *
+from .extractors import *
 root: Path = None
 
 
