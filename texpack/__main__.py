@@ -22,7 +22,7 @@ def parse_args() -> Tuple[Path, Path, Path]:
     entry = Path(parsed.entry)
     entry_fn = entry.name
     parent = entry.parent
-    output = parsed.output or f"merged_{entry_fn}"
+    output = parsed.output or f"texpack-{entry_fn}"
     output_fp = parent / output
     return entry, parent, output_fp
 
