@@ -1,7 +1,8 @@
+[![PyPI version](https://badge.fury.io/py/texpack.svg)](https://badge.fury.io/py/texpack)
+
 # texpack
 Pack .tex files into a single .tex file.
 This may be useful for arXiv, etc.
-
 
 ## Background
 When creating LaTeX documents, it's often convenient to split the work into smaller .tex files using commands like `\input` or `\subfile`. 
