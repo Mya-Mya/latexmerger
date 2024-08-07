@@ -5,3 +5,5 @@
 example/merged_entry.tex
 
 __pycache__/
+dist/
+texpack.egg-info/
