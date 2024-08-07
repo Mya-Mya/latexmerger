@@ -8,7 +8,7 @@ name = "texpack"
 setup(
     name=name,
     packages=[name],
-    version=__version__+read_text(Path("./pypi-trial-sub-version.txt")),
+    version=__version__,
     license="MIT",
     install_requires="",
     tests_require="",
