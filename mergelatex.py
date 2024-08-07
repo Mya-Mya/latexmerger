@@ -4,7 +4,7 @@ from pathlib import Path
 import re
 from abc import ABC, abstractmethod
 
-entry_parent: Path = None
+root: Path = None
 
 
 def parse_args() -> Tuple[Path, Path, Path]:
@@ -39,7 +39,7 @@ class BodyExtractor(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def extract(self, parent: Path, line: str) -> Tuple[List[str], Path]:
+    def extract(self, parent: Path, root: Path, line: str) -> Tuple[List[str], Path]:
         raise NotImplementedError()
 
 
@@ -50,11 +50,11 @@ class InputExtractor(BodyExtractor):
     def matches(self, line: str) -> bool:
         return bool(self.pat.match(line))
 
-    def extract(self, parent: Path, line: str) -> Tuple[List[str], Path]:
+    def extract(self, parent: Path, root: Path, line: str) -> Tuple[List[str], Path]:
         mat = self.pat.match(line)
         stem = mat.group(1)
         # The entry file's directory - based relative path is required for \input.
-        target = entry_parent / f"{stem}.tex"
+        target = root / f"{stem}.tex"
         body = read_text(target)
         body_lines = body.split("\n")
         return body_lines, target
@@ -67,7 +67,7 @@ class SubfileExtractor(BodyExtractor):
     def matches(self, line: str) -> bool:
         return bool(self.pat.match(line))
 
-    def extract(self, parent: Path, line: str) -> Tuple[List[str], Path]:
+    def extract(self, parent: Path, root: Path, line: str) -> Tuple[List[str], Path]:
         mat = self.pat.match(line)
         stem = mat.group(1)
         target = parent / f"{stem}.tex"
@@ -93,7 +93,7 @@ extractors: List[BodyExtractor] = [InputExtractor(), SubfileExtractor()]
 def extract_ifany(parent: Path, line: str) -> Optional[Tuple[List[str], Path]]:
     for extractor in extractors:
         if extractor.matches(line):
-            return extractor.extract(parent, line)
+            return extractor.extract(parent, root, line)
     return None
 
 
@@ -106,7 +106,7 @@ def expand(parent: Path, lines: List[str], depth: int = 0) -> List[str]:
             body_lines, target = extracted
             arrow = ">" * (depth + 1)
             barrow = "<" * (depth + 1)
-            target_relation = str(target.relative_to(entry_parent))
+            target_relation = str(target.relative_to(root))
             expanded_lines.append(f"% {arrow} {target_relation} {arrow} : LaTeX Merger")
             expanded_lines += expand(target.parent, body_lines, depth=depth + 1)
             expanded_lines.append(
@@ -123,17 +123,18 @@ def main():
         response = input(
             f"The output file {output_fp.name} already exists. OVERWRITE THIS? ARE YOU SURE? [Y/other]"
         )
-        if response!="Y":
+        if response != "Y":
             print("Aborted.")
             exit(-1)
-    
-    global entry_parent
-    entry_parent = parent
+
+    global root
+    root = parent
     entry_lines = read_text(entry).split("\n")
     result = expand(parent, entry_lines)
     text = "\n".join(result)
     output_fp.write_text(text)
     print("Merged File Written.")
+
 
 if __name__ == "__main__":
     main()
