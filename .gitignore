@@ -3,3 +3,5 @@
 *.pdf
 
 example/merged_entry.tex
+
+__pycache__/
